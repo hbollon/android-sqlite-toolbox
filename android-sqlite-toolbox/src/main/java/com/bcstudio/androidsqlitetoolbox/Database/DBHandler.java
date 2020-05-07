@@ -80,7 +80,11 @@ public class DBHandler extends SQLiteOpenHelper {
         );
 
         tables.add(table);
-        db = this.getWritableDatabase();
+        db = openDataBase();
+    }
+
+    private synchronized SQLiteDatabase openDataBase() {
+        return getWritableDatabase();
     }
 
     /**

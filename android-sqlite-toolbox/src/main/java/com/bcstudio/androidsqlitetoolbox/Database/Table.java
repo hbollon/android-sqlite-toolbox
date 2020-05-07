@@ -13,13 +13,13 @@ public class Table {
     }
 
     private void initSQL(){
-        String SQL = " CREATE TABLE " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
+        sql = " CREATE TABLE " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
         for (int i = 0; i < columns.length; i++) {
-            SQL += " " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ";
+            sql += " " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ";
             if (i == columns.length - 1) {
-                SQL += " ) ";
+                sql += " ) ";
             } else {
-                SQL += " , ";
+                sql += " , ";
             }
         }
     }

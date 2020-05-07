@@ -43,7 +43,8 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.buttonAddTableDb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.addTable("Exemple", new Column("Col1", "text"), new Column("Col2", "text"));
+                if(db != null)
+                    db.addTable("Exemple", new Column("Col1", "text"), new Column("Col2", "text"));
             }
         });
     }
