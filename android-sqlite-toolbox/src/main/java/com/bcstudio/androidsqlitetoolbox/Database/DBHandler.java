@@ -44,7 +44,6 @@ import retrofit2.Response;
 public class DBHandler extends SQLiteOpenHelper {
     private final String DB_NAME;
 
-    private SQLiteDatabase db;
     private DatabaseErrorHandler dbErrHandler;
     private SQLiteDatabase.CursorFactory curFactory;
     private Context appContext;
@@ -106,6 +105,36 @@ public class DBHandler extends SQLiteOpenHelper {
         return appContext.deleteDatabase(DB_NAME);
     }
 
+    /**
+     * Delete all data from table
+     * @param tableName Table name
+     */
+    public void deleteAllDataFrom(String tableName) {
+        SQLiteDatabase db = openDataBase();
+        db.execSQL("DELETE * FROM " + tableName);
+    }
+
+    /**
+     * Delete row from table
+     * @param tableName Table name
+     * @param rowIndex Row id
+     * @return Success bool
+     */
+    public boolean deleteRow(String tableName, int rowIndex) {
+        SQLiteDatabase db = openDataBase();
+        return db.delete(tableName, "id = ?", new String[]{String.valueOf(rowIndex)}) == 1;
+    }
+
+    /**
+     * Delete row from table with where clause
+     * @param tableName Table name
+     * @param data Data instance
+     * @return Success bool
+     */
+    public boolean deleteRowWhere(String tableName, Data data) {
+        SQLiteDatabase db = openDataBase();
+        return db.delete(tableName, data.getColumnName() + " = ?", new String[]{String.valueOf(data.getValue())}) == 1;
+    }
     /**
      * Insert Data instance into db table
      * @param tableName Table name
@@ -396,7 +425,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        this.db = db;
         for (int i = 0; i < tables.size(); i++) {
             db.execSQL(tables.get(i).getSql());
         }
