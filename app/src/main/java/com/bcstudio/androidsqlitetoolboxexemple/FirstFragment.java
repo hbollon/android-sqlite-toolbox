@@ -78,6 +78,11 @@ public class FirstFragment extends Fragment {
                         new Data("Col2", "Col2Data2"),
                         new Data("Col3", "Col3Data2"));*/
 
+                db.deleteAllDataFrom("Exemple1");
+                db.deleteRow("Exemple2", 6);
+                db.deleteRowWhere("Exemple2", new Data("Col1", "Col1Data1"));
+                db.updateData("Exemple3", 6, new Data("Col2", "testUpdate"), new Data("Col3", "testUpdate2"));
+
                 Cursor cr = db.getMultipleDataFromTable("Exemple1", "Col1", "Col3");
                 Log.d(Constants.PACKAGE_NAME, "-> db.getMultipleDataFromTable(\"Exemple1\", \"Col1\", \"Col3\"");
                 while(cr.moveToNext()){

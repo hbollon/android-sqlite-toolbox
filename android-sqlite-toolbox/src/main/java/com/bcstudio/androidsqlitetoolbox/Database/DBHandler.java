@@ -111,7 +111,7 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public void deleteAllDataFrom(String tableName) {
         SQLiteDatabase db = openDataBase();
-        db.execSQL("DELETE * FROM " + tableName);
+        db.execSQL("DELETE FROM " + tableName);
     }
 
     /**
@@ -135,6 +135,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = openDataBase();
         return db.delete(tableName, data.getColumnName() + " = ?", new String[]{String.valueOf(data.getValue())}) == 1;
     }
+
     /**
      * Insert Data instance into db table
      * @param tableName Table name
@@ -159,17 +160,22 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Delete entry from db
-     * Required table name and entry id
-     *
-     * @param id Entry id
-     * @param table Table name
-     * @return bool
+     * Update row from table with Data array
+     * @param tableName Table name
+     * @param rowIndex Row id
+     * @param data Data array
+     * @return Success bool
      */
-    public boolean deleteData(String id, String table){
-        SQLiteDatabase db = this.getWritableDatabase();
-        long res = db.delete(table,"id=?",new String[]{id});
-        return res != -1;
+    public boolean updateData(String tableName, int rowIndex, Data... data) {
+        ContentValues cv = new ContentValues();
+        for (Data datum : data) {
+            if (datum.getColumnName().isEmpty()) {
+                return false;
+            } else {
+                cv.put(datum.getColumnName(), datum.getValue());
+            }
+        }
+        return openDataBase().update(tableName, cv, "id = ?", new String[]{String.valueOf(rowIndex)}) > 0;
     }
 
     /**
