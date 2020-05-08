@@ -143,48 +143,67 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Return Cursor pointing on first element of desired data of table
+     * Return Cursor pointing on first element of desired column of table
      *
      * @param table Table name
-     * @param data Data name
+     * @param column Data name
      * @return Cursor
      */
-    public Cursor getOneDataFromTable(String table, String data)
+    public Cursor getOneDataFromTable(String table, String column)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT " + data + " FROM " + table, null);
+        return db.rawQuery("SELECT " + column + " FROM " + table, null);
     }
 
     /**
      * Return Cursor pointing on first element of desired data of table with where parameter
      *
      * @param table Table name
-     * @param data Data name
+     * @param column Data name
      * @param where Where constraint
      * @return Cursor
      */
-    public Cursor getOneDataFromTable(String table, String data, String where)
+    public Cursor getOneDataFromTable(String table, String column, String where)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT " + data + " FROM " + table + " WHERE " + where, null);
+        return db.rawQuery("SELECT " + column + " FROM " + table + " WHERE " + where, null);
     }
 
     /**
-     * Return Cursor pointing on first element of desired data of table
+     * Return Cursor pointing on first element of desired columns of table
      *
      * @param table Table name
-     * @param data Data name
+     * @param columns Data name
      * @return Cursor
      */
-    public Cursor getMultipleDataFromTable(String table, String[] data)
+    public Cursor getMultipleDataFromTable(String table, String... columns)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        String catData = data[0];
-        for (int i = 1; i < data.length; i++) {
-            catData = catData.concat(", "+data[i]);
+        String catColumn = columns[0];
+        for (int i = 1; i < columns.length; i++) {
+            catColumn = catColumn.concat(", "+columns[i]);
         }
-        Log.d(Constants.PACKAGE_NAME, "SELECT " + catData + " FROM " + table);
-        return db.rawQuery("SELECT " + catData + " FROM " + table, null);
+        Log.d(Constants.PACKAGE_NAME, "SELECT " + catColumn + " FROM " + table);
+        return db.rawQuery("SELECT " + catColumn + " FROM " + table, null);
+    }
+
+    /**
+     * Return Cursor pointing on first element of desired columns of table with where parameter
+     *
+     * @param table Table name
+     * @param where Where string argument
+     * @param columns Data name
+     * @return Cursor
+     */
+    public Cursor getMultipleDataFromTableWhere(String table, String where, String... columns)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String catColumn = columns[0];
+        for (int i = 1; i < columns.length; i++) {
+            catColumn = catColumn.concat(", "+columns[i]);
+        }
+        Log.d(Constants.PACKAGE_NAME, "SELECT " + catColumn + " FROM " + table + " WHERE " + where);
+        return db.rawQuery("SELECT " + catColumn + " FROM " + table + " WHERE " + where, null);
     }
 
     /**
