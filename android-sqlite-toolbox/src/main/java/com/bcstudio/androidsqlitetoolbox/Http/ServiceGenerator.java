@@ -1,5 +1,7 @@
 package com.bcstudio.androidsqlitetoolbox.Http;
 
+import com.bcstudio.androidsqlitetoolbox.Constants;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -10,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
 
     // base url for request
-    private static final String BASE_URL = "https://c5dd5d13-6ea9-4683-99cb-9fc0a7611fa6.mock.pstmn.io/";
+    private static final String BASE_URL = Constants.SYNC_URL;
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
