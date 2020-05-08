@@ -32,11 +32,13 @@ import retrofit2.Response;
 
 /**
  * Database helper class used for interact with db and table for operation like:
- * - insert
- * - delete
- * - select
- * - update
- * - create database and tables
+ * - insert data
+ * - delete data
+ * - select and get single or multiple data from tables with or without where arg
+ * - update data
+ * - create database and add tables
+ * - export db
+ * - sync db to remote api
  */
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -85,7 +87,7 @@ public class DBHandler extends SQLiteOpenHelper {
         );
 
         tables.add(table);
-        db = openDataBase();
+        openDataBase().execSQL(table.getSql());
     }
 
     /**
@@ -102,6 +104,29 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public boolean deleteDatabase() {
         return appContext.deleteDatabase(DB_NAME);
+    }
+
+    /**
+     * Insert Data instance into db table
+     * @param tableName Table name
+     * @param data Array of Data
+     * @return Success bool
+     */
+    public boolean addDataInTable(String tableName, Data... data) {
+        if(getTableIndexFromName(tableName) == -1)
+            return false;
+
+        ContentValues cv = new ContentValues();
+        for (Data datum : data) {
+            if (datum.getColumnName().isEmpty()) {
+                return false;
+            } else {
+                cv.put(datum.getColumnName(), datum.getValue());
+            }
+        }
+
+        long result = openDataBase().insert(tableName, null, cv);
+        return result != -1;
     }
 
     /**
@@ -242,6 +267,20 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Used to get table index in tables array with his name
+     * Can also be used to verify existence of the table
+     * @param tableName Name of the table
+     * @return Table index or -1 if not found
+     */
+    public int getTableIndexFromName(String tableName){
+        for(int i = 0; i<tables.size(); i++){
+            if(tables.get(i).getTableName().trim().equals(tableName))
+                return i;
+        }
+        return -1;
+    }
+
+    /**
      * Return the number of elements in the table
      *
      * @param table Table name
@@ -293,7 +332,7 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public void exportDbToCSV(){
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
+            SQLiteDatabase db = openDataBase();
             ExportConfig config = new ExportConfig(db, DB_NAME, ExportConfig.ExportType.CSV, appContext);
             DBExporterCsv exporter = new DBExporterCsv(config);
             exporter.export();
@@ -307,7 +346,7 @@ public class DBHandler extends SQLiteOpenHelper {
      */
     public void exportDbToJSON(){
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
+            SQLiteDatabase db = openDataBase();
             ExportConfig config = new ExportConfig(db, DB_NAME, ExportConfig.ExportType.JSON, appContext);
             DBExporterJson exporter = new DBExporterJson(config);
             exporter.export();

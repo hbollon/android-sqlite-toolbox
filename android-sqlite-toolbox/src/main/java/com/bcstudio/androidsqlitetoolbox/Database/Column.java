@@ -5,7 +5,7 @@ public class Column {
     private String columnName = "", columnDataType = "";
 
     public Column(String columnName, String... columnDataTypes) {
-        this.columnName = columnName.replaceAll(" ", "_").toUpperCase();
+        this.columnName = columnName.replaceAll(" ", "_");
         String finalDatatype = "";
         for (int i = 0; i < columnDataTypes.length; i++) {
             if (!columnDataTypes[i].startsWith(" ")) {

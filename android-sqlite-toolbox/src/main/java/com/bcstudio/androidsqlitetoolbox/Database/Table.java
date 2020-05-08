@@ -13,7 +13,7 @@ public class Table {
     }
 
     private void initSQL(){
-        sql = " CREATE TABLE " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
+        sql = " CREATE TABLE IF NOT EXISTS " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
         for (int i = 0; i < columns.length; i++) {
             sql += " " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ";
             if (i == columns.length - 1) {
