@@ -10,11 +10,12 @@
 
 ### 🏠 [Homepage](https://github.com/hbollon/android-sqlite-toolbox)
 
-<p align="center"><strong> In early development, not safe for production use ! </strong></p>
+<p align="center"><strong> In early development, use it in production at your own risk </strong></p>
 
 ## Status
 
 Done :
+ - DBHandler -> Add crud support for db (easy and modulable insert, delete, update, read data in db)
  - Sqlite database export tools (Csv and Json export implemented, you can easily add other format with DBExporter abstract class). ExportConfig class is used for export configuration.
  - Http sync with remote db, sending only for the moment (local -> remote, we send db in json file). The request structure can be easily edited with FileUploadService interface. 
  - Table and Column data classes :  used for represent db table and column
@@ -22,7 +23,6 @@ Done :
  - Random tools in FileUtils
  
 In progress :
-  - DBHandler -> Add crud support for db (easy and modulable insert, delete, update, read data in db)
   - Simple android exemple activity for main functions
   
 Planned :
@@ -48,7 +48,7 @@ Coming soon ;)
 👤 **Hugo Bollon**
 
 * Github: [@hbollon](https://github.com/hbollon)
-* LinkedIn: [@Hugo Bollon](https:/www.linkedin.com/in/hugo-bollon-68a2381a4/)
+* LinkedIn: [@Hugo Bollon](https://www.linkedin.com/in/hugo-bollon-68a2381a4/)
 
 ## 🤝 Contributing
 
