@@ -364,8 +364,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     /**
      * Export db in csv
+     * @return Success boolean
      */
-    public void exportDbToCSV(){
+    public boolean exportDbToCSV(){
         try {
             SQLiteDatabase db = openDataBase();
             ExportConfig config = new ExportConfig(db, DB_NAME, ExportConfig.ExportType.CSV, appContext);
@@ -373,13 +374,16 @@ public class DBHandler extends SQLiteOpenHelper {
             exporter.export();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /**
      * Export db in json
+     * @return Success boolean
      */
-    public void exportDbToJSON(){
+    public boolean exportDbToJSON(){
         try {
             SQLiteDatabase db = openDataBase();
             ExportConfig config = new ExportConfig(db, DB_NAME, ExportConfig.ExportType.JSON, appContext);
@@ -387,46 +391,62 @@ public class DBHandler extends SQLiteOpenHelper {
             exporter.export();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+    }
+
+    /**
+     * Change the base url for db sync
+     * @param url Api url
+     */
+    public void setSyncBaseUrl(String url){
+        Constants.SYNC_URL = url;
     }
 
     /**
      * Synchronization function used to send db instance in json file to remote api
      */
     public void syncDb(){
-        FileUploadService service =
-                ServiceGenerator.createService(FileUploadService.class);
-
         File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
-        Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
+        if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
+            FileUploadService service =
+                    ServiceGenerator.createService(FileUploadService.class);
 
-        RequestBody requestFile =
-                RequestBody.create(
-                        MediaType.parse(Uri.fromFile(dbJsonPath).toString()),
-                        dbJsonPath
-                );
+            Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
 
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("value", dbJsonPath.getName(), requestFile);
+            RequestBody requestFile =
+                    RequestBody.create(
+                            MediaType.parse(Uri.fromFile(dbJsonPath).toString()),
+                            dbJsonPath
+                    );
 
-        String titleString = "DB sync";
-        RequestBody title =
-                RequestBody.create(
-                        okhttp3.MultipartBody.FORM, titleString);
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("value", dbJsonPath.getName(), requestFile);
 
-        Call<ResponseBody> call = service.upload(title, body);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   Response<ResponseBody> response) {
-                Log.v("Upload", "success");
-            }
+            String titleString = "DB sync";
+            RequestBody title =
+                    RequestBody.create(
+                            okhttp3.MultipartBody.FORM, titleString);
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
-            }
-        });
+            Call<ResponseBody> call = service.upload(title, body);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call,
+                                       Response<ResponseBody> response) {
+                    Log.v("Upload", "success");
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("Upload error:", t.getMessage());
+                }
+            });
+        }
+        else{
+            if(exportDbToJSON())
+                syncDb();
+        }
     }
 
     @Override
