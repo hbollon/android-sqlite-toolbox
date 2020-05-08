@@ -73,6 +73,11 @@ public class DBHandler extends SQLiteOpenHelper {
         this.dbErrHandler = dbErrHandler;
     }
 
+    /**
+     * Add table in existing database and upgrade it
+     * @param tableName Name of the new table
+     * @param columns List of column
+     */
     public void addTable(String tableName, Column... columns) {
         Table table = new Table(
                 tableName,
@@ -83,8 +88,20 @@ public class DBHandler extends SQLiteOpenHelper {
         db = openDataBase();
     }
 
-    private synchronized SQLiteDatabase openDataBase() {
+    /**
+     * Open writable db instance
+     * @return Writable db instance
+     */
+    public synchronized SQLiteDatabase openDataBase() {
         return getWritableDatabase();
+    }
+
+    /**
+     * Delete db
+     * @return Success
+     */
+    public boolean deleteDatabase() {
+        return appContext.deleteDatabase(DB_NAME);
     }
 
     /**
@@ -218,9 +235,9 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Check if db is empty
+     * Check if table in db is empty
      *
-     * @param table Table name
+     * @param table Table instance
      * @return boolean
      */
     public boolean isTableEmpty(Table table)
@@ -234,6 +251,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return empty;
     }
+    /**
+     * Check if table in db is empty
+     *
+     * @param table Table name
+     * @return boolean
+     */
     public boolean isTableEmpty(String table)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -246,6 +269,9 @@ public class DBHandler extends SQLiteOpenHelper {
         return empty;
     }
 
+    /**
+     * Export db in csv
+     */
     public void exportDbToCSV(){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -257,6 +283,9 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Export db in json
+     */
     public void exportDbToJSON(){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -268,6 +297,9 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Synchronization function used to send db instance in json file to remote api
+     */
     public void syncDb(){
         FileUploadService service =
                 ServiceGenerator.createService(FileUploadService.class);
