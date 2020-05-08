@@ -1,6 +1,8 @@
 <h1 align="center">Welcome to android-sqlite-toolbox 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-v0.1.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://jitpack.io/#hbollon/android-sqlite-toolbox" target="_blank">
+    <img alt="Version" src="https://jitpack.io/v/hbollon/android-sqlite-toolbox.svg" />
+  </a>
   <a href="https://github.com/hbollon/android-sqlite-toolbox/blob/master/LICENSE.md" target="_blank">
     <img alt="License: GNU General Public License v3.0" src="https://img.shields.io/badge/License-GNU General Public License v3.0-yellow.svg" />
   </a>
@@ -31,13 +33,32 @@ Planned :
 
 ## Install
 
-For the moment, you can download and test it by download the repo, copying module folder into your android project and implement it into your gradle config file with : 
+This library is available int jitpack.io repository !
+
+- Step 1 : Add this snippet to your project root build.gradle :
 
 ```sh
-implementation project(path: ':android-sqlite-toolbox')
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
 
-I will add it to gradle sources later in the development.
+- Step 2 : Add the dependency to your module build.gradle (Replace "Tag" with last release version) :
+
+```sh
+dependencies {
+    // Needed libs
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+
+    implementation 'com.github.hbollon:android-sqlite-toolbox:Tag'
+}
+```
+
+That's it ! You can now import all library classes into your android project !
 
 ## How to use it
 
