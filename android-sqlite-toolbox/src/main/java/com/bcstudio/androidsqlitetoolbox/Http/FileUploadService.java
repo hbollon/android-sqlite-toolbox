@@ -16,6 +16,6 @@ public interface FileUploadService {
     @POST("sync")
     Call<ResponseBody> upload(
             @Part("description") RequestBody description,
-            @Part MultipartBody.Part file
+            @Part("content") RequestBody file
     );
 }
