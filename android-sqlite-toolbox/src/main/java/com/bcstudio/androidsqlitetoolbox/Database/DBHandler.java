@@ -17,8 +17,13 @@ import com.bcstudio.androidsqlitetoolbox.Export.ExportConfig;
 import com.bcstudio.androidsqlitetoolbox.FileUtils;
 import com.bcstudio.androidsqlitetoolbox.Http.FileUploadService;
 import com.bcstudio.androidsqlitetoolbox.Http.ServiceGenerator;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +34,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 /**
  * Database helper class used for interact with db and table for operation like:
@@ -406,8 +412,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
     /**
      * Synchronization function used to send db instance in json file to remote api
+     *
+     * @param autoExport Enable auto re-export in json before sync
      */
-    public void syncDb(){
+    public void syncDb(boolean autoExport) throws FileNotFoundException {
+        if(autoExport)
+            exportDbToJSON();
+
         File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
         if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
             FileUploadService service =
@@ -415,37 +426,43 @@ public class DBHandler extends SQLiteOpenHelper {
 
             Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
 
-            RequestBody requestFile =
-                    RequestBody.create(
-                            MediaType.parse(Uri.fromFile(dbJsonPath).toString()),
-                            dbJsonPath
-                    );
-
-            MultipartBody.Part body =
-                    MultipartBody.Part.createFormData("value", dbJsonPath.getName(), requestFile);
-
             String titleString = "DB sync";
             RequestBody title =
                     RequestBody.create(
                             okhttp3.MultipartBody.FORM, titleString);
 
-            Call<ResponseBody> call = service.upload(title, body);
+            String jsonContent = "";
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(dbJsonPath));
+                JsonObject js = new Gson().fromJson(bufferedReader, JsonObject.class);
+                jsonContent = new Gson().toJson(js);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            RequestBody content =
+                    RequestBody.create(
+                            okhttp3.MultipartBody.FORM, jsonContent);
+
+            Call<ResponseBody> call = service.upload(title, content);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
+                @EverythingIsNonNull
                 public void onResponse(Call<ResponseBody> call,
                                        Response<ResponseBody> response) {
                     Log.v("Upload", "success");
                 }
 
                 @Override
+                @EverythingIsNonNull
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Log.e("Upload error:", t.getMessage());
                 }
             });
         }
         else{
-            if(exportDbToJSON())
-                syncDb();
+            throw new FileNotFoundException("Db json file not found for synchronizing");
         }
     }
 

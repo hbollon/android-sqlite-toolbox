@@ -6,46 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <TextView
-        android:id="@+id/textview_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Database interactions"
-        app:layout_constraintBottom_toTopOf="@id/button_first"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonCreateDb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create db"
-        app:layout_constraintBottom_toTopOf="@+id/button_first"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first"
-        app:layout_constraintVertical_bias="0.247" />
-
-    <Button
-        android:id="@+id/buttonAddTableDb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add exemple table  db"
-        app:layout_constraintBottom_toTopOf="@+id/button_first"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCreateDb"
-        app:layout_constraintVertical_bias="0.464" />
-
-    <Button
-        android:id="@+id/button_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textview_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Database interactions" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <Button
+            android:id="@+id/buttonCreateDb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create db" />
+
+        <Button
+            android:id="@+id/buttonAddTableDb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add exemple table  db" />
+
+        <Button
+            android:id="@+id/buttonSyncDb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sync db" />
+
+        <Button
+            android:id="@+id/button_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

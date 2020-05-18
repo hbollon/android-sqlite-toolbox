@@ -16,6 +16,8 @@ import com.bcstudio.androidsqlitetoolbox.Database.Column;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 import com.bcstudio.androidsqlitetoolbox.Database.Data;
 
+import java.io.FileNotFoundException;
+
 public class FirstFragment extends Fragment {
     private DBHandler db;
     private String DEV_TEST_DB = "DEV_TEST_DB";
@@ -104,6 +106,18 @@ public class FirstFragment extends Fragment {
                 if(db == null)
                     db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
                 db.addTable("Test", new Column("Col1", "text"), new Column("Col2", "text"));
+            }
+        });
+        view.findViewById(R.id.buttonSyncDb).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(db == null)
+                    db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
+                try {
+                    db.syncDb(true);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
