@@ -421,15 +421,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
         if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
-            FileUploadService service =
-                    ServiceGenerator.createService(FileUploadService.class);
-
             Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
-
-            String titleString = "DB sync";
-            RequestBody title =
-                    RequestBody.create(
-                            okhttp3.MultipartBody.FORM, titleString);
 
             String jsonContent = "";
             try {
@@ -441,11 +433,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 return;
             }
 
-            RequestBody content =
-                    RequestBody.create(
-                            okhttp3.MultipartBody.FORM, jsonContent);
-
-            Call<ResponseBody> call = service.upload(title, content);
+            Call<ResponseBody> call = requestBuilder(jsonContent);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 @EverythingIsNonNull
@@ -464,6 +452,30 @@ public class DBHandler extends SQLiteOpenHelper {
         else{
             throw new FileNotFoundException("Db json file not found for synchronizing");
         }
+    }
+
+    /**
+     * Request builder method, used to build custom request for syncDb method
+     * Can be override to build custom request, need an interface template for the request model (cf : FileUploadService)
+     * By default, it will create a request composed by : description ("DB sync") and a content (jsonData)
+     *
+     * @param jsonData Exported json data
+     * @return Call<ResponseBody> build with specific model
+     */
+    public Call<ResponseBody> requestBuilder(String jsonData){
+        FileUploadService service =
+                ServiceGenerator.createService(FileUploadService.class);
+
+        String titleString = "DB sync";
+        RequestBody title =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, titleString);
+
+        RequestBody content =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, jsonData);
+
+        return service.upload(title, content);
     }
 
     @Override

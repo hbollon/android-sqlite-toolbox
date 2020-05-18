@@ -16,6 +16,9 @@ import com.bcstudio.androidsqlitetoolbox.Database.Column;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 import com.bcstudio.androidsqlitetoolbox.Database.Data;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+
 import java.io.FileNotFoundException;
 
 public class FirstFragment extends Fragment {
@@ -112,7 +115,13 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(db == null)
-                    db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
+                    db = new DBHandler(getContext(), DEV_TEST_DB, null, 1){
+                        // Enable to custom sync request
+                        @Override
+                        public Call<ResponseBody> requestBuilder(String jsonData) {
+                            return super.requestBuilder(jsonData);
+                        }
+                    };
                 try {
                     db.syncDb(true);
                 } catch (FileNotFoundException e) {
