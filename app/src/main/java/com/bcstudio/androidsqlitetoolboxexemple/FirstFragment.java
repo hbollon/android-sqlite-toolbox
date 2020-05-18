@@ -15,6 +15,7 @@ import com.bcstudio.androidsqlitetoolbox.Constants;
 import com.bcstudio.androidsqlitetoolbox.Database.Column;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 import com.bcstudio.androidsqlitetoolbox.Database.Data;
+import com.bcstudio.androidsqlitetoolbox.Http.FileUploadService;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -53,35 +54,41 @@ public class FirstFragment extends Fragment {
                 db.addTable("Exemple2", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
                 db.addTable("Exemple3", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
 
-                /*db.addDataInTable("Exemple1", new Data("Col1", "Col1Data1"),
-                        new Data("Col2", "Col2Data1"),
-                        new Data("Col3", "Col3Data1"));
-                db.addDataInTable("Exemple1", new Data("Col1", "Col1Data1"),
-                        new Data("Col2", "Col2Data1"),
-                        new Data("Col3", "Col3Data1"));
-                db.addDataInTable("Exemple1", new Data("Col1", "Col1Data2"),
-                        new Data("Col2", "Col2Data2"),
-                        new Data("Col3", "Col3Data2"));
+                if(db.isTableEmpty("Exemple1") || db.isTableEmpty("Exemple2") || db.isTableEmpty("Exemple3")) {
+                    db.deleteAllDataFrom("Exemple1");
+                    db.deleteAllDataFrom("Exemple2");
+                    db.deleteAllDataFrom("Exemple3");
 
-                db.addDataInTable("Exemple2", new Data("Col1", "Col1Data1"),
-                        new Data("Col2", "Col2Data1"),
-                        new Data("Col3", "Col3Data1"));
-                db.addDataInTable("Exemple2", new Data("Col1", "Col1Data1"),
-                        new Data("Col2", "Col2Data1"),
-                        new Data("Col3", "Col3Data1"));
-                db.addDataInTable("Exemple2", new Data("Col1", "Col1Data2"),
-                        new Data("Col2", "Col2Data2"),
-                        new Data("Col3", "Col3Data2"));
+                    db.addDataInTable("Exemple1", new Data("Col1", "Col1Data1"),
+                            new Data("Col2", "Col2Data1"),
+                            new Data("Col3", "Col3Data1"));
+                    db.addDataInTable("Exemple1", new Data("Col1", "Col1Data1"),
+                            new Data("Col2", "Col2Data1"),
+                            new Data("Col3", "Col3Data1"));
+                    db.addDataInTable("Exemple1", new Data("Col1", "Col1Data2"),
+                            new Data("Col2", "Col2Data2"),
+                            new Data("Col3", "Col3Data2"));
 
-                db.addDataInTable("Exemple3", new Data("Col1", "Col1Data1"),
-                        new Data("Col2", "Col2Data1"),
-                        new Data("Col3", "Col3Data1"));
-                db.addDataInTable("Exemple3", new Data("Col1", "Col1Data1"),
-                        new Data("Col2", "Col2Data1"),
-                        new Data("Col3", "Col3Data1"));
-                db.addDataInTable("Exemple3", new Data("Col1", "Col1Data2"),
-                        new Data("Col2", "Col2Data2"),
-                        new Data("Col3", "Col3Data2"));*/
+                    db.addDataInTable("Exemple2", new Data("Col1", "Col1Data1"),
+                            new Data("Col2", "Col2Data1"),
+                            new Data("Col3", "Col3Data1"));
+                    db.addDataInTable("Exemple2", new Data("Col1", "Col1Data1"),
+                            new Data("Col2", "Col2Data1"),
+                            new Data("Col3", "Col3Data1"));
+                    db.addDataInTable("Exemple2", new Data("Col1", "Col1Data2"),
+                            new Data("Col2", "Col2Data2"),
+                            new Data("Col3", "Col3Data2"));
+
+                    db.addDataInTable("Exemple3", new Data("Col1", "Col1Data1"),
+                            new Data("Col2", "Col2Data1"),
+                            new Data("Col3", "Col3Data1"));
+                    db.addDataInTable("Exemple3", new Data("Col1", "Col1Data1"),
+                            new Data("Col2", "Col2Data1"),
+                            new Data("Col3", "Col3Data1"));
+                    db.addDataInTable("Exemple3", new Data("Col1", "Col1Data2"),
+                            new Data("Col2", "Col2Data2"),
+                            new Data("Col3", "Col3Data2"));
+                }
 
                 db.deleteAllDataFrom("Exemple1");
                 db.deleteRow("Exemple2", 6);
@@ -96,7 +103,7 @@ public class FirstFragment extends Fragment {
                 }
 
                 cr = db.getMultipleDataFromTableWhere("Exemple1", "Col1=\"Col1Data1\"", "Col1", "Col3");
-                Log.d(Constants.PACKAGE_NAME, "-> db.getMultipleDataFromTableWhere(\"Exemple1\", \"Col1=\"Col1Data1\"\", \"Col1\", \"Col3\"");
+                Log.d(Constants.PACKAGE_NAME, "-> db.getMultipleDataFromTableWhere(\"Exemple1\", \"Col1=\"Col1Data1\", \"Col1\", \"Col3\"");
                 while(cr.moveToNext()){
                     for (int i=0; i<cr.getColumnCount(); i++)
                         Log.d(Constants.PACKAGE_NAME, cr.getString(i));
