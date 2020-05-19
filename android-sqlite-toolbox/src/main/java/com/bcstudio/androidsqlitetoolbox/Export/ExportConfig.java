@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bcstudio.androidsqlitetoolbox.FileUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,14 +67,14 @@ public class ExportConfig {
      * Return corresponding file extension
      * @return String
      */
-    public String getFileExtension(){
+    public String getFileExtension() throws IllegalArgumentException {
         switch(exportType){
             case CSV:
                 return ".csv";
             case JSON:
                 return ".json";
             default:
-                return "";
+                throw new IllegalArgumentException("File format unhandled or invalid");
         }
     }
 
