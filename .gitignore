@@ -83,3 +83,17 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+.project
+
+.settings/org.eclipse.buildship.core.prefs
+
+android-sqlite-toolbox/.classpath
+
+android-sqlite-toolbox/.settings/org.eclipse.buildship.core.prefs
+
+app/.classpath
+
+app/.settings/org.eclipse.buildship.core.prefs
+
+README.pdf

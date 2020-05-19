@@ -3,8 +3,8 @@
   <a href="https://jitpack.io/#hbollon/android-sqlite-toolbox" target="_blank">
     <img alt="Version" src="https://jitpack.io/v/hbollon/android-sqlite-toolbox.svg" />
   </a>
-  <a href="https://github.com/hbollon/android-sqlite-toolbox/blob/master/LICENSE.md" target="_blank">
-    <img alt="License: GNU General Public License v3.0" src="https://img.shields.io/badge/License-GNU General Public License v3.0-yellow.svg" />
+  <a href="https://github.com/hbollon/android-sqlite-toolbox/blob/master/LICENSE" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
 </p>
 
@@ -19,13 +19,14 @@
 Done :
  - DBHandler -> Add crud support for db (easy and modulable insert, delete, update, read data in db)
  - Sqlite database export tools (Csv and Json export implemented, you can easily add other format with DBExporter abstract class). ExportConfig class is used for export configuration.
- - Http sync with remote db, sending only for the moment (local -> remote, we send db in json file). The request structure can be easily edited with FileUploadService interface. 
+ - Http sync with remote db, sending only for the moment (local -> remote, we send db in json file). The request structure can be easily edited with FileUploadService interface and requestBuilder method. 
  - Table and Column data classes :  used for represent db table and column
  - Db creation and tables addition in DBHandler
  - Random tools in FileUtils
  
 In progress :
   - Simple android exemple activity for main functions
+  - Enhance customization and modulability of the exporter
   
 Planned :
   - Db import from Json / Csv (like DBExporter structure so easily adaptable to others formats)
@@ -33,11 +34,11 @@ Planned :
 
 ## Install
 
-This library is available int jitpack.io repository !
+This library is available in jitpack.io repository !
 
-- Step 1 : Add this snippet to your project root build.gradle :
+- Step 1 : Add this repo source to your project root build.gradle :
 
-```sh
+```gradle
 allprojects {
     repositories {
         ...
@@ -48,13 +49,13 @@ allprojects {
 
 - Step 2 : Add the dependency to your module build.gradle (Replace "Tag" with last release version) :
 
-```sh
+```gradle
 dependencies {
-    // Needed libs
+    implementation 'com.github.hbollon:android-sqlite-toolbox:Tag'
+
+    // Needed libs if you override syncDb function
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-
-    implementation 'com.github.hbollon:android-sqlite-toolbox:Tag'
 }
 ```
 
@@ -81,5 +82,7 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
+This library use [Retrofit2](https://github.com/square/retrofit) lib for http request under [Apache License 2.0](https://github.com/square/retrofit/blob/master/LICENSE.txt)<br />
+
 Copyright © 2020 [Hugo Bollon](https://github.com/hbollon).<br />
-This project is [GNU General Public License v3.0](https://github.com/hbollon/android-sqlite-toolbox/blob/master/LICENSE.md) licensed.
+This project is [MIT License](https://github.com/hbollon/android-sqlite-toolbox/blob/master/LICENSE) licensed.
