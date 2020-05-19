@@ -88,15 +88,19 @@ public class ExportConfig {
      * @throws IllegalArgumentException
      */
     public String getFileExtension() throws IllegalArgumentException {
-        switch(exportType){
-            case CSV:
-                return ".csv";
-            case JSON:
-                return ".json";
-            default:
-                if(!exportCustomFileExtension.trim().equals("") && exportCustomFileExtension.trim().matches("\\.[a-z]+"))
-                    return exportCustomFileExtension.trim();
-                throw new IllegalArgumentException("File format unhandled or invalid");
+        if(exportType != null) {
+            switch (exportType) {
+                case CSV:
+                    return ".csv";
+                case JSON:
+                    return ".json";
+                default:
+                    throw new IllegalArgumentException("File format unhandled or invalid");
+            }
+        } else {
+            if(!exportCustomFileExtension.trim().equals("") && exportCustomFileExtension.trim().matches("\\.[a-z]+"))
+                return exportCustomFileExtension.trim();
+            throw new IllegalArgumentException("File format unhandled or invalid");
         }
     }
 

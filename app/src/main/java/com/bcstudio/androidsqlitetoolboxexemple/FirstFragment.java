@@ -48,7 +48,6 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.buttonCreateDb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String DEV_TEST_DB = "DEV_TEST_DB";
                 db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
                 db.addTable("Exemple1", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
                 db.addTable("Exemple2", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
