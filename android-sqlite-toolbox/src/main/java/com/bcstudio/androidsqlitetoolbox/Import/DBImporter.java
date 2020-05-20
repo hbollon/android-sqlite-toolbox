@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -25,7 +26,7 @@ public abstract class DBImporter {
     protected String parsedData;
     protected JSONObject jsonDb;
 
-    DBImporter(ImportConfig importConfig) throws FileNotFoundException {
+    DBImporter(ImportConfig importConfig) throws IOException {
         this.importConfig = importConfig;
         this.db = importConfig.db;
         this.srcFile = importConfig.srcFile;
@@ -36,7 +37,7 @@ public abstract class DBImporter {
 
     protected abstract void parseData(String data);
 
-    protected abstract String readFile(BufferedReader bf);
+    protected abstract String readFile(BufferedReader bf) throws IOException;
 
     public ArrayList<Pair<String, JSONArray>> getTables() throws JSONException {
         Iterator<String> keys = jsonDb.keys();
