@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -149,6 +150,29 @@ public class DBHandler extends SQLiteOpenHelper {
      * @return Success bool
      */
     public boolean addDataInTable(String tableName, Data... data) {
+        if(getTableIndexFromName(tableName) == -1)
+            return false;
+
+        ContentValues cv = new ContentValues();
+        for (Data datum : data) {
+            if (datum.getColumnName().isEmpty()) {
+                return false;
+            } else {
+                cv.put(datum.getColumnName(), datum.getValue());
+            }
+        }
+
+        long result = openDataBase().insert(tableName, null, cv);
+        return result != -1;
+    }
+
+    /**
+     * Insert Data instance into db table
+     * @param tableName Table name
+     * @param data Array of Data
+     * @return Success bool
+     */
+    public boolean addDataInTable(String tableName, Set<Data> data) {
         if(getTableIndexFromName(tableName) == -1)
             return false;
 
