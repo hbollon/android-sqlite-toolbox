@@ -29,7 +29,7 @@ public abstract class DBExporter {
      * Constructor
      * @param config ExportConfig instance containing export config
      */
-    public DBExporter(ExportConfig config) {
+    DBExporter(ExportConfig config) {
         this.config = config;
         db = config.db;
         directory = config.directory;

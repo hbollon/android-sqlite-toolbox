@@ -32,5 +32,11 @@
             android:layout_height="wrap_content"
             android:text="Export db" />
 
+        <Button
+            android:id="@+id/buttonImportDb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Import db" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

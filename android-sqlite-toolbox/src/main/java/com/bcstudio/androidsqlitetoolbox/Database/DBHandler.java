@@ -17,6 +17,8 @@ import com.bcstudio.androidsqlitetoolbox.Export.ExportConfig;
 import com.bcstudio.androidsqlitetoolbox.FileUtils;
 import com.bcstudio.androidsqlitetoolbox.Http.FileUploadService;
 import com.bcstudio.androidsqlitetoolbox.Http.ServiceGenerator;
+import com.bcstudio.androidsqlitetoolbox.Import.DBImporterJson;
+import com.bcstudio.androidsqlitetoolbox.Import.ImportConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -26,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -69,6 +72,8 @@ public class DBHandler extends SQLiteOpenHelper {
         this.DB_NAME = dbName;
         this.curFactory = curFactory;
         this.version = version;
+
+        //refreshTablesSet();
     }
 
     public DBHandler(Context context, String dbName, SQLiteDatabase.CursorFactory curFactory, int version, DatabaseErrorHandler dbErrHandler) {
@@ -78,7 +83,20 @@ public class DBHandler extends SQLiteOpenHelper {
         this.curFactory = curFactory;
         this.version = version;
         this.dbErrHandler = dbErrHandler;
+
+        //refreshTablesSet();
     }
+
+    /*public void refreshTablesSet(){
+        Cursor c = openDataBase().rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                tables.add(c.getString( c.getColumnIndex("name")));
+                c.moveToNext();
+            }
+        }
+        c.close();
+    }*/
 
     /**
      * Add table in existing database and upgrade it
@@ -149,6 +167,29 @@ public class DBHandler extends SQLiteOpenHelper {
      * @return Success bool
      */
     public boolean addDataInTable(String tableName, Data... data) {
+        if(getTableIndexFromName(tableName) == -1)
+            return false;
+
+        ContentValues cv = new ContentValues();
+        for (Data datum : data) {
+            if (datum.getColumnName().isEmpty()) {
+                return false;
+            } else {
+                cv.put(datum.getColumnName(), datum.getValue());
+            }
+        }
+
+        long result = openDataBase().insert(tableName, null, cv);
+        return result != -1;
+    }
+
+    /**
+     * Insert Data instance into db table
+     * @param tableName Table name
+     * @param data Array of Data
+     * @return Success bool
+     */
+    public boolean addDataInTable(String tableName, Set<Data> data) {
         if(getTableIndexFromName(tableName) == -1)
             return false;
 
@@ -395,6 +436,28 @@ public class DBHandler extends SQLiteOpenHelper {
             ExportConfig config = new ExportConfig(db, DB_NAME, ExportConfig.ExportType.JSON, appContext);
             DBExporterJson exporter = new DBExporterJson(config);
             exporter.export();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Restore db from json export
+     * @return Success boolean
+     */
+    public boolean restoreDbFromJSON(){
+        try {
+            File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
+            if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
+                ImportConfig config = new ImportConfig(this, dbJsonPath, ImportConfig.ImportType.JSON);
+                DBImporterJson importer = new DBImporterJson(config);
+                importer.restore();
+            }
+            else{
+                throw new FileNotFoundException("Db json file not found for restore");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;

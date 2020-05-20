@@ -38,6 +38,11 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
+        db.addTable("Exemple1", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
+        db.addTable("Exemple2", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
+        db.addTable("Exemple3", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
+
         view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,11 +53,6 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.buttonCreateDb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
-                db.addTable("Exemple1", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
-                db.addTable("Exemple2", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
-                db.addTable("Exemple3", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
-
                 if(db.isTableEmpty("Exemple1") || db.isTableEmpty("Exemple2") || db.isTableEmpty("Exemple3")) {
                     db.deleteAllDataFrom("Exemple1");
                     db.deleteAllDataFrom("Exemple2");
@@ -89,12 +89,12 @@ public class FirstFragment extends Fragment {
                             new Data("Col3", "Col3Data2"));
                 }
 
-                db.deleteAllDataFrom("Exemple1");
+                /*db.deleteAllDataFrom("Exemple1");
                 db.deleteRow("Exemple2", 6);
                 db.deleteRowWhere("Exemple2", new Data("Col1", "Col1Data1"));
-                db.updateData("Exemple3", 6, new Data("Col2", "testUpdate"), new Data("Col3", "testUpdate2"));
+                db.updateData("Exemple3", 6, new Data("Col2", "testUpdate"), new Data("Col3", "testUpdate2"));*/
 
-                Cursor cr = db.getMultipleDataFromTable("Exemple1", "Col1", "Col3");
+                /*Cursor cr = db.getMultipleDataFromTable("Exemple1", "Col1", "Col3");
                 Log.d(Constants.PACKAGE_NAME, "-> db.getMultipleDataFromTable(\"Exemple1\", \"Col1\", \"Col3\"");
                 while(cr.moveToNext()){
                     for (int i=0; i<cr.getColumnCount(); i++)
@@ -106,7 +106,7 @@ public class FirstFragment extends Fragment {
                 while(cr.moveToNext()){
                     for (int i=0; i<cr.getColumnCount(); i++)
                         Log.d(Constants.PACKAGE_NAME, cr.getString(i));
-                }
+                }*/
             }
         });
         view.findViewById(R.id.buttonAddTableDb).setOnClickListener(new View.OnClickListener() {
@@ -133,6 +133,16 @@ public class FirstFragment extends Fragment {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        view.findViewById(R.id.buttonDeleteData).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(db == null)
+                    db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
+                db.deleteAllDataFrom("Exemple1");
+                db.deleteAllDataFrom("Exemple2");
+                db.deleteAllDataFrom("Exemple3");
             }
         });
     }
