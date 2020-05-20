@@ -1,5 +1,9 @@
 package com.bcstudio.androidsqlitetoolbox.Import;
 
+import android.util.Log;
+
+import com.bcstudio.androidsqlitetoolbox.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +23,7 @@ public class DBImporterJson extends DBImporter{
         while ((line = bf.readLine()) != null) {
             sb.append(line);
         }
+        Log.d(Constants.PACKAGE_NAME, "Json file content : " + sb.toString());
         return sb.toString();
     }
 
@@ -26,6 +31,7 @@ public class DBImporterJson extends DBImporter{
     protected void parseData(String data) {
         try {
             jsonDb = (JSONObject) (new JSONObject(data)).get(importConfig.getDatabaseName());
+            Log.d(Constants.PACKAGE_NAME, "JSONObject content : " + jsonDb.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             jsonDb = new JSONObject();

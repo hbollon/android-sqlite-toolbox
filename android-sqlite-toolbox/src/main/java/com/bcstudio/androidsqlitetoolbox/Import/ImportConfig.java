@@ -1,7 +1,5 @@
 package com.bcstudio.androidsqlitetoolbox.Import;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 
 import java.io.File;

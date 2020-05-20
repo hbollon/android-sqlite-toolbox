@@ -2,6 +2,7 @@ package com.bcstudio.androidsqlitetoolboxexemple;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bcstudio.androidsqlitetoolbox.Constants;
+import com.bcstudio.androidsqlitetoolbox.Database.Column;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 import com.bcstudio.androidsqlitetoolbox.Export.DBExporterJson;
 import com.bcstudio.androidsqlitetoolbox.Export.ExportConfig;
@@ -31,6 +34,9 @@ public class SecondFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
+        db.addTable("Exemple1", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
+        db.addTable("Exemple2", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
+        db.addTable("Exemple3", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
 
         view.findViewById(R.id.buttonExportDb).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +75,16 @@ public class SecondFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
+            }
+        });
+        view.findViewById(R.id.buttonImportDb).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(Constants.PACKAGE_NAME, "importing db...");
+                if(db.restoreDbFromJSON())
+                    Log.d(Constants.PACKAGE_NAME, "import finish");
+                else
+                    Log.w(Constants.PACKAGE_NAME, "import failed");
             }
         });
     }

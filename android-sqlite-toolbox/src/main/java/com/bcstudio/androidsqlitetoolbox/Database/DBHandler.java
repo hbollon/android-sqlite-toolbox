@@ -17,6 +17,8 @@ import com.bcstudio.androidsqlitetoolbox.Export.ExportConfig;
 import com.bcstudio.androidsqlitetoolbox.FileUtils;
 import com.bcstudio.androidsqlitetoolbox.Http.FileUploadService;
 import com.bcstudio.androidsqlitetoolbox.Http.ServiceGenerator;
+import com.bcstudio.androidsqlitetoolbox.Import.DBImporterJson;
+import com.bcstudio.androidsqlitetoolbox.Import.ImportConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -70,6 +72,8 @@ public class DBHandler extends SQLiteOpenHelper {
         this.DB_NAME = dbName;
         this.curFactory = curFactory;
         this.version = version;
+
+        //refreshTablesSet();
     }
 
     public DBHandler(Context context, String dbName, SQLiteDatabase.CursorFactory curFactory, int version, DatabaseErrorHandler dbErrHandler) {
@@ -79,7 +83,20 @@ public class DBHandler extends SQLiteOpenHelper {
         this.curFactory = curFactory;
         this.version = version;
         this.dbErrHandler = dbErrHandler;
+
+        //refreshTablesSet();
     }
+
+    /*public void refreshTablesSet(){
+        Cursor c = openDataBase().rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                tables.add(c.getString( c.getColumnIndex("name")));
+                c.moveToNext();
+            }
+        }
+        c.close();
+    }*/
 
     /**
      * Add table in existing database and upgrade it
@@ -419,6 +436,28 @@ public class DBHandler extends SQLiteOpenHelper {
             ExportConfig config = new ExportConfig(db, DB_NAME, ExportConfig.ExportType.JSON, appContext);
             DBExporterJson exporter = new DBExporterJson(config);
             exporter.export();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Restore db from json export
+     * @return Success boolean
+     */
+    public boolean restoreDbFromJSON(){
+        try {
+            File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
+            if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
+                ImportConfig config = new ImportConfig(this, dbJsonPath, ImportConfig.ImportType.JSON);
+                DBImporterJson importer = new DBImporterJson(config);
+                importer.restore();
+            }
+            else{
+                throw new FileNotFoundException("Db json file not found for restore");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;

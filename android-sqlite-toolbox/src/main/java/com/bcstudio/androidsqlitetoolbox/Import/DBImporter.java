@@ -1,7 +1,9 @@
 package com.bcstudio.androidsqlitetoolbox.Import;
 
+import android.util.Log;
 import android.util.Pair;
 
+import com.bcstudio.androidsqlitetoolbox.Constants;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 import com.bcstudio.androidsqlitetoolbox.Database.Data;
 
@@ -45,6 +47,7 @@ public abstract class DBImporter {
         while(keys.hasNext()) {
             String key = keys.next();
             tables.add(new Pair<>(key, jsonDb.getJSONArray(key)));
+            Log.d(Constants.PACKAGE_NAME, "getTables() : Table -> " + key);
         }
         return tables;
     }
@@ -56,10 +59,11 @@ public abstract class DBImporter {
     public void restore() throws JSONException {
         ArrayList<Pair<String, JSONArray>> tables = getTables();
         for(int i = 0; i<tables.size(); i++){
-
+            Log.d(Constants.PACKAGE_NAME, "restore() : table -> " + tables.get(i).first);
             if(!importConfig.isExcludeTable(tables.get(i).first)){
+                Log.d(Constants.PACKAGE_NAME, "restore() : table -> " + tables.get(i).first + " is not excluded from import, continuing...");
                 if(db.getTableIndexFromName(tables.get(i).first) != -1){
-
+                    Log.d(Constants.PACKAGE_NAME, "restore() : table -> " + tables.get(i).first + " exist in db, continuing...");
                     LinkedHashSet<Data> tableData = new LinkedHashSet<>();
                     for(int j = 0; j < tables.get(i).second.length(); j++) {
                         JSONObject row = tables.get(i).second.getJSONObject(j);
@@ -67,6 +71,7 @@ public abstract class DBImporter {
                         while (keys.hasNext()) {
                             String key = keys.next();
                             tableData.add(new Data(key, row.getString(key)));
+                            Log.d(Constants.PACKAGE_NAME, "restore() : Colomn -> " + key + " Value -> " + row.getString(key));
                         }
                         db.addDataInTable(tables.get(i).first, tableData);
                     }
