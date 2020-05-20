@@ -1,5 +1,6 @@
 package com.bcstudio.androidsqlitetoolboxexemple;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
+import com.bcstudio.androidsqlitetoolbox.Export.DBExporterJson;
+import com.bcstudio.androidsqlitetoolbox.Export.ExportConfig;
+
 public class SecondFragment extends Fragment {
+    private DBHandler db;
+    private String DEV_TEST_DB = "DEV_TEST_DB";
 
     @Override
     public View onCreateView(
@@ -23,11 +30,45 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
+        db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
+
+        view.findViewById(R.id.buttonExportDb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                db.exportDbToCSV();
+                db.exportDbToJSON();
+
+                /*try {
+                    ExportConfig config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, ". json", getContext());
+                    DBExporterJson exporter = new DBExporterJson(config);
+                    exporter.export();
+
+                    config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, ".j son", getContext());
+                    exporter = new DBExporterJson(config);
+                    exporter.export();
+
+                    config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, ".js7on", getContext());
+                    exporter = new DBExporterJson(config);
+                    exporter.export();
+
+                    config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, ".7", getContext());
+                    exporter = new DBExporterJson(config);
+                    exporter.export();
+
+                    config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, ".Json", getContext());
+                    exporter = new DBExporterJson(config);
+                    exporter.export();
+
+                    config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, ".jsoN", getContext());
+                    exporter = new DBExporterJson(config);
+                    exporter.export();
+
+                    config = new ExportConfig(db.openDataBase(), DEV_TEST_DB, " .json ", getContext());
+                    exporter = new DBExporterJson(config);
+                    exporter.export();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
             }
         });
     }

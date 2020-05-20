@@ -68,8 +68,15 @@ public abstract class DBExporter {
                 }
             }
         }
+
         c.close();
-        this.writeToFile(getExportAsString(), dbName + config.getFileExtension());
+        try {
+            this.writeToFile(getExportAsString(), dbName + config.getFileExtension());
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+            return;
+        }
+
         Log.i(Constants.PACKAGE_NAME, "exporting database complete");
     }
 
