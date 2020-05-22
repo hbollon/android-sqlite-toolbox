@@ -37,11 +37,21 @@ public abstract class DBImporter {
         parseData(readFile(reader));
     }
 
+    /**
+     * Convert data to JSONObject
+     * @param data File data string from readFile()
+     */
     protected abstract void parseData(String data);
 
+    /**
+     * Read and build a string from a file
+     * @param bf BufferedReader
+     * @return File data string
+     * @throws IOException
+     */
     protected abstract String readFile(BufferedReader bf) throws IOException;
 
-    public ArrayList<Pair<String, JSONArray>> getTables() throws JSONException {
+    protected ArrayList<Pair<String, JSONArray>> getTables() throws JSONException {
         Iterator<String> keys = jsonDb.keys();
         ArrayList<Pair<String, JSONArray>> tables = new ArrayList<>();
         while(keys.hasNext()) {
@@ -52,10 +62,47 @@ public abstract class DBImporter {
         return tables;
     }
 
-    public JSONArray getTable(String tableName) throws JSONException {
+    protected JSONArray getTable(String tableName) throws JSONException {
         return jsonDb.getJSONArray(tableName);
     }
 
+    /**
+     * Import data to db from file
+     * Ignore id, created_at and update_at fields and add new data after the rest
+     * @throws JSONException
+     */
+    public void importData() throws JSONException {
+        ArrayList<Pair<String, JSONArray>> tables = getTables();
+        for (int i = 0; i < tables.size(); i++) {
+            Log.d(Constants.PACKAGE_NAME, "importData() : table -> " + tables.get(i).first);
+            importConfig.setExcludeTable("id");
+            importConfig.setExcludeTable("created_at");
+            importConfig.setExcludeTable("updated_at");
+            if (!importConfig.isExcludeTable(tables.get(i).first)) {
+                Log.d(Constants.PACKAGE_NAME, "importData() : table -> " + tables.get(i).first + " is not excluded from import, continuing...");
+                if (db.getTableIndexFromName(tables.get(i).first) != -1) {
+                    Log.d(Constants.PACKAGE_NAME, "importData() : table -> " + tables.get(i).first + " exist in db, continuing...");
+                    LinkedHashSet<Data> tableData = new LinkedHashSet<>();
+                    for (int j = 0; j < tables.get(i).second.length(); j++) {
+                        JSONObject row = tables.get(i).second.getJSONObject(j);
+                        Iterator<String> keys = row.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            tableData.add(new Data(key, row.getString(key)));
+                            Log.d(Constants.PACKAGE_NAME, "importData() : Colomn -> " + key + " Value -> " + row.getString(key));
+                        }
+                        db.addDataInTable(tables.get(i).first, tableData);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Restore data to db from file
+     * Keep id, created_at and updated_at fields (so it will don't add data with already taken id or it need a fresh database)
+     * @throws JSONException
+     */
     public void restore() throws JSONException {
         ArrayList<Pair<String, JSONArray>> tables = getTables();
         for(int i = 0; i<tables.size(); i++){
