@@ -23,13 +23,13 @@ Done :
  - Table and Column data classes :  used for represent db table and column
  - Db creation and tables addition in DBHandler
  - Random tools in FileUtils
+ - Db importer which handle natively import from Json (like DBExporter structure so easily adaptable to others formats)
  
 In progress :
   - Simple android exemple activity for main functions
-  - Enhance customization and modulability of the exporter
+  - Add csv native support for import
   
 Planned :
-  - Db import from Json / Csv (like DBExporter structure so easily adaptable to others formats)
   - Sync db, remote -> local
 
 ## Install
