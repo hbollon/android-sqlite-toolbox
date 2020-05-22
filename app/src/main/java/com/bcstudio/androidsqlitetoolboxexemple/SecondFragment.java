@@ -81,7 +81,7 @@ public class SecondFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(Constants.PACKAGE_NAME, "importing db...");
-                if(db.restoreDbFromJSON())
+                if(db.importDataFromJSON())
                     Log.d(Constants.PACKAGE_NAME, "import finish");
                 else
                     Log.w(Constants.PACKAGE_NAME, "import failed");

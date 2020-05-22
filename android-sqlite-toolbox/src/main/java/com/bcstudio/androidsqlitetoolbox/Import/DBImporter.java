@@ -75,9 +75,9 @@ public abstract class DBImporter {
         ArrayList<Pair<String, JSONArray>> tables = getTables();
         for (int i = 0; i < tables.size(); i++) {
             Log.d(Constants.PACKAGE_NAME, "importData() : table -> " + tables.get(i).first);
-            importConfig.setExcludeTable("id");
-            importConfig.setExcludeTable("created_at");
-            importConfig.setExcludeTable("updated_at");
+            importConfig.setExcludeField("id");
+            importConfig.setExcludeField("created_at");
+            importConfig.setExcludeField("updated_at");
             if (!importConfig.isExcludeTable(tables.get(i).first)) {
                 Log.d(Constants.PACKAGE_NAME, "importData() : table -> " + tables.get(i).first + " is not excluded from import, continuing...");
                 if (db.getTableIndexFromName(tables.get(i).first) != -1) {
@@ -88,8 +88,10 @@ public abstract class DBImporter {
                         Iterator<String> keys = row.keys();
                         while (keys.hasNext()) {
                             String key = keys.next();
-                            tableData.add(new Data(key, row.getString(key)));
-                            Log.d(Constants.PACKAGE_NAME, "importData() : Colomn -> " + key + " Value -> " + row.getString(key));
+                            if(!importConfig.isExcludeField(key)) {
+                                tableData.add(new Data(key, row.getString(key)));
+                                Log.d(Constants.PACKAGE_NAME, "importData() : Colomn -> " + key + " Value -> " + row.getString(key));
+                            } else Log.d(Constants.PACKAGE_NAME, "importData() : Colomn -> " + key + " Ignore : field exclude");
                         }
                         db.addDataInTable(tables.get(i).first, tableData);
                     }
@@ -117,8 +119,13 @@ public abstract class DBImporter {
                         Iterator<String> keys = row.keys();
                         while (keys.hasNext()) {
                             String key = keys.next();
-                            tableData.add(new Data(key, row.getString(key)));
-                            Log.d(Constants.PACKAGE_NAME, "restore() : Colomn -> " + key + " Value -> " + row.getString(key));
+                            if(!importConfig.isExcludeField(key)
+                                    || (key.trim().toUpperCase().equals("ID")
+                                        || key.trim().toUpperCase().equals("CREATED_AT")
+                                        || key.trim().toUpperCase().equals("UPDATED_AT"))) {
+                                tableData.add(new Data(key, row.getString(key)));
+                                Log.d(Constants.PACKAGE_NAME, "restore() : Colomn -> " + key + " Value -> " + row.getString(key));
+                            }
                         }
                         db.addDataInTable(tables.get(i).first, tableData);
                     }
