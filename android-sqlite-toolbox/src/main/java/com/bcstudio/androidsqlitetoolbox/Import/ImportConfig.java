@@ -1,12 +1,16 @@
 package com.bcstudio.androidsqlitetoolbox.Import;
 
+import android.util.Log;
+
+import com.bcstudio.androidsqlitetoolbox.Componants.DbInteractionConfig;
+import com.bcstudio.androidsqlitetoolbox.Constants;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ImportConfig {
+public class ImportConfig extends DbInteractionConfig {
     public enum ImportType {
         JSON;
     }
@@ -16,8 +20,6 @@ public class ImportConfig {
     File srcFile;
 
     private ImportType importType;
-    private String databaseName;
-    private Set<String> excludedTables;
 
     public ImportConfig(DBHandler database, File srcFile, ImportType importType) {
         this.srcFile = srcFile;
@@ -31,29 +33,4 @@ public class ImportConfig {
         this.databaseName = databaseName;
         this.importType = importType;
     }
-
-    public void setExcludeTable(String tableName) {
-        if (excludedTables == null) {
-            excludedTables = new HashSet<>();
-        }
-        excludedTables.add(tableName);
-    }
-
-    /**
-     * Check if table id excluded
-     * @param tableName
-     * @return bool
-     */
-    public boolean isExcludeTable(String tableName) {
-        if (excludedTables == null) {
-            return false;
-        }
-        return excludedTables.contains(tableName);
-    }
-
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-
 }

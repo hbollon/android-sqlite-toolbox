@@ -466,6 +466,50 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Import data from json export to db
+     * @return Success boolean
+     */
+    public boolean importDataFromJSON(){
+        try {
+            File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
+            if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
+                ImportConfig config = new ImportConfig(this, dbJsonPath, ImportConfig.ImportType.JSON);
+                DBImporterJson importer = new DBImporterJson(config);
+                importer.importData();
+            }
+            else{
+                throw new FileNotFoundException("Db json file not found for import");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Import data from custom json file to db
+     * @param file Json file with compatible data
+     * @return Success boolean
+     */
+    public boolean importDataFromJSON(File file){
+        try {
+            if(file.exists() && !file.isDirectory()) {
+                ImportConfig config = new ImportConfig(this, file, ImportConfig.ImportType.JSON);
+                DBImporterJson importer = new DBImporterJson(config);
+                importer.importData();
+            }
+            else{
+                throw new FileNotFoundException("Db json file not found for import");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Change the base url for db sync
      * @param url Api url
      */

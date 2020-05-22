@@ -3,6 +3,7 @@ package com.bcstudio.androidsqlitetoolbox.Export;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bcstudio.androidsqlitetoolbox.Componants.DbInteractionConfig;
 import com.bcstudio.androidsqlitetoolbox.FileUtils;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ExportConfig {
+public class ExportConfig extends DbInteractionConfig {
 
     public enum ExportType {
         JSON, CSV;
@@ -22,8 +23,6 @@ public class ExportConfig {
 
     private ExportType exportType;
     private String exportCustomFileExtension = "";
-    private String databaseName;
-    private Set<String> excludedTables;
 
     /**
      * Constructor
@@ -63,25 +62,6 @@ public class ExportConfig {
         this.directory = FileUtils.createDirIfNotExist(FileUtils.getAppDir(appContext) + "/databases/");
     }
 
-    public void setExcludeTable(String tableName) {
-        if (excludedTables == null) {
-            excludedTables = new HashSet<>();
-        }
-        excludedTables.add(tableName);
-    }
-
-    /**
-     * Check if table id excluded
-     * @param tableName
-     * @return bool
-     */
-    public boolean isExcludeTable(String tableName) {
-        if (excludedTables == null) {
-            return false;
-        }
-        return excludedTables.contains(tableName);
-    }
-
     /**
      * Return corresponding file extension
      * @return File extension string
@@ -103,9 +83,4 @@ public class ExportConfig {
             throw new IllegalArgumentException("File format unhandled or invalid");
         }
     }
-
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
 }
