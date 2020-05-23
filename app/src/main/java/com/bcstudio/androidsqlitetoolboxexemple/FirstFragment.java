@@ -130,7 +130,7 @@ public class FirstFragment extends Fragment {
                     };
                 try {
                     db.syncDb(true);
-                } catch (FileNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

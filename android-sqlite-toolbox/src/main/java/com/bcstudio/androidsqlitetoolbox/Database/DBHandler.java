@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.bcstudio.androidsqlitetoolbox.Constants;
+import com.bcstudio.androidsqlitetoolbox.Exceptions.MissingSyncUrlException;
 import com.bcstudio.androidsqlitetoolbox.Export.DBExporterCsv;
 import com.bcstudio.androidsqlitetoolbox.Export.DBExporterJson;
 import com.bcstudio.androidsqlitetoolbox.Export.ExportConfig;
@@ -520,44 +521,48 @@ public class DBHandler extends SQLiteOpenHelper {
     /**
      * Synchronization function used to send db instance in json file to remote api
      *
-     * @param autoExport Enable auto re-export in json before sync
+     * @param autoExport Enable auto export to json before sync
      */
-    public void syncDb(boolean autoExport) throws FileNotFoundException {
-        if(autoExport)
-            exportDbToJSON();
+    public void syncDb(boolean autoExport) throws Exception {
+        if(Constants.SYNC_URL == null || Constants.SYNC_URL.trim().equals("")) {
+            if (autoExport)
+                exportDbToJSON();
 
-        File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
-        if(dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
-            Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
+            File dbJsonPath = new File(FileUtils.getAppDir(appContext) + "/databases/" + DB_NAME + ".json");
+            if (dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
+                Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
 
-            String jsonContent = "";
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(dbJsonPath));
-                JsonObject js = new Gson().fromJson(bufferedReader, JsonObject.class);
-                jsonContent = new Gson().toJson(js);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return;
+                String jsonContent = "";
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(dbJsonPath));
+                    JsonObject js = new Gson().fromJson(bufferedReader, JsonObject.class);
+                    jsonContent = new Gson().toJson(js);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                Call<ResponseBody> call = requestBuilder(jsonContent);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    @EverythingIsNonNull
+                    public void onResponse(Call<ResponseBody> call,
+                                           Response<ResponseBody> response) {
+                        Log.v("Upload", "success");
+                    }
+
+                    @Override
+                    @EverythingIsNonNull
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("Upload error:", t.getMessage());
+                    }
+                });
+            } else {
+                throw new FileNotFoundException("Db json file not found for synchronizing");
             }
-
-            Call<ResponseBody> call = requestBuilder(jsonContent);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                @EverythingIsNonNull
-                public void onResponse(Call<ResponseBody> call,
-                                       Response<ResponseBody> response) {
-                    Log.v("Upload", "success");
-                }
-
-                @Override
-                @EverythingIsNonNull
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e("Upload error:", t.getMessage());
-                }
-            });
         }
         else{
-            throw new FileNotFoundException("Db json file not found for synchronizing");
+            throw new MissingSyncUrlException("Constants.SYNC_URL empty or null");
         }
     }
 
