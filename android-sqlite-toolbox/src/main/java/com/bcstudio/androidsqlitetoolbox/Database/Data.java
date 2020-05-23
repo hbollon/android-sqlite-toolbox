@@ -1,8 +1,8 @@
 package com.bcstudio.androidsqlitetoolbox.Database;
 
 public class Data {
-    private String columnName = "";
-    private String value = "";
+    private String columnName;
+    private String value;
 
     public Data(String columnName, String value) {
         this.columnName = columnName.replace(" ", "_");

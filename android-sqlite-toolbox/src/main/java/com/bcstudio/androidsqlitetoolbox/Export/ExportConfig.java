@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ExportConfig extends DbInteractionConfig {
 
     public enum ExportType {
-        JSON, CSV;
+        JSON, CSV
     }
 
     // Package variables

@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import okhttp3.RequestBody;
@@ -529,7 +530,7 @@ public class DBHandler extends SQLiteOpenHelper {
             if (dbJsonPath.exists() && !dbJsonPath.isDirectory()) {
                 Log.d(Constants.PACKAGE_NAME, dbJsonPath.getAbsolutePath());
 
-                String jsonContent = "";
+                String jsonContent;
                 try {
                     BufferedReader bufferedReader = new BufferedReader(new FileReader(dbJsonPath));
                     JsonObject js = new Gson().fromJson(bufferedReader, JsonObject.class);
@@ -551,7 +552,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     @Override
                     @EverythingIsNonNull
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e("Upload error:", t.getMessage());
+                        Log.e("Upload error:", Objects.requireNonNull(t.getMessage()));
                     }
                 });
             } else {

@@ -2,7 +2,7 @@ package com.bcstudio.androidsqlitetoolbox.Database;
 
 public class Column {
 
-    private String columnName = "", columnDataType = "";
+    private String columnName, columnDataType;
 
     public Column(String columnName, String... columnDataTypes) {
         this.columnName = columnName.replaceAll(" ", "_");

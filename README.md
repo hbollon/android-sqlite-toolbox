@@ -17,20 +17,23 @@
 ## Status
 
 Done :
- - DBHandler -> Add crud support for db (easy and modulable insert, delete, update, read data in db)
- - Sqlite database export tools (Csv and Json export implemented, you can easily add other format with DBExporter abstract class). ExportConfig class is used for export configuration.
- - Http sync with remote db, sending only for the moment (local -> remote, we send db in json file). The request structure can be easily edited with FileUploadService interface and requestBuilder method. 
- - Table and Column data classes :  used for represent db table and column
- - Db creation and tables addition in DBHandler
- - Random tools in FileUtils
- - Db importer which handle natively import from Json (like DBExporter structure so easily adaptable to others formats)
- 
+
+- DBHandler -> Add crud support for db (easy and modulable insert, delete, update, read data in db)
+- Sqlite database export tools (Csv and Json export implemented, you can easily add other format with DBExporter abstract class). ExportConfig class is used for export configuration.
+- Http sync with remote db, sending only for the moment (local -> remote, we send db in json file). The request structure can be easily edited with FileUploadService interface and requestBuilder method. 
+- Table and Column data classes :  used for represent db table and column
+- Db creation and tables addition in DBHandler
+- Random tools in FileUtils
+- Db importer which handle natively import from Json (like DBExporter structure so easily adaptable to others formats)
+
 In progress :
-  - Simple android exemple activity for main functions
-  - Add csv native support for import
+
+- Simple android exemple activity for main functions
+- Add csv native support for import
   
 Planned :
-  - Sync db, remote -> local
+
+- Sync db, remote -> local
 
 ## Install
 
@@ -53,7 +56,7 @@ allprojects {
 dependencies {
     implementation 'com.github.hbollon:android-sqlite-toolbox:Tag'
 
-    // Needed libs if you override syncDb function
+    // Needed libs if you override requestBuilder() or any http related function
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 }

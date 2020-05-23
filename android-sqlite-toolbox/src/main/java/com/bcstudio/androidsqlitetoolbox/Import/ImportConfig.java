@@ -7,7 +7,7 @@ import java.io.File;
 
 public class ImportConfig extends DbInteractionConfig {
     public enum ImportType {
-        JSON;
+        JSON
     }
 
     // Package variables
