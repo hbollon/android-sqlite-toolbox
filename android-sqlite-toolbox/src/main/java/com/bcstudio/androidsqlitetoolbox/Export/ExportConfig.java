@@ -8,8 +8,6 @@ import com.bcstudio.androidsqlitetoolbox.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ExportConfig extends DbInteractionConfig {
 

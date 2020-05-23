@@ -1,14 +1,9 @@
 package com.bcstudio.androidsqlitetoolbox.Import;
 
-import android.util.Log;
-
 import com.bcstudio.androidsqlitetoolbox.Componants.DbInteractionConfig;
-import com.bcstudio.androidsqlitetoolbox.Constants;
 import com.bcstudio.androidsqlitetoolbox.Database.DBHandler;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ImportConfig extends DbInteractionConfig {
     public enum ImportType {

@@ -7,7 +7,6 @@ import android.database.DatabaseErrorHandler;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.util.Log;
 
 import com.bcstudio.androidsqlitetoolbox.Constants;
@@ -31,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
