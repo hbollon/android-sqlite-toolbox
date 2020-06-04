@@ -123,9 +123,10 @@ public class DBHandler extends SQLiteOpenHelper {
                     }
                 }
 
-                if(getTableIndexFromName(currentTableName) != -1)
+                if(getTableIndexFromName(currentTableName) != -1){
                     if(override)
                         tables.set(getTableIndexFromName(currentTableName), new Table(currentTableName, columnList.toArray(new Column[0])));
+                }
                 else
                     tables.add(new Table(currentTableName, columnList.toArray(new Column[0])));
 
@@ -146,7 +147,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 columns
         );
 
-        tables.add(table);
+        if(getTableIndexFromName(tableName) != -1)
+            tables.set(getTableIndexFromName(tableName), table);
+        else
+            tables.add(table);
+
         openDataBase().execSQL(table.getSql());
     }
 
