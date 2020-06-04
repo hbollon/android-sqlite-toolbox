@@ -1,5 +1,7 @@
 package com.bcstudio.androidsqlitetoolbox.Database;
 
+import java.util.Objects;
+
 public class Data {
     private String columnName;
     private String value;
@@ -33,5 +35,19 @@ public class Data {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Data)) return false;
+        Data data = (Data) o;
+        return Objects.equals(columnName, data.columnName) &&
+                Objects.equals(value, data.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnName, value);
     }
 }

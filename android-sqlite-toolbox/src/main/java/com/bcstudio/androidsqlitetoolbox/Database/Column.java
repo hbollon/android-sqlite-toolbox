@@ -1,5 +1,7 @@
 package com.bcstudio.androidsqlitetoolbox.Database;
 
+import java.util.Objects;
+
 public class Column {
 
     private String columnName, columnDataType;
@@ -14,7 +16,7 @@ public class Column {
             if (!columnDataTypes[i].endsWith(" ")) {
                 columnDataTypes[i] = columnDataTypes[i] + " ";
             }
-            finalDatatype += columnDataTypes[i];
+            finalDatatype = finalDatatype.concat(columnDataTypes[i]);
         }
         this.columnDataType = finalDatatype.toUpperCase();
     }
@@ -35,4 +37,17 @@ public class Column {
         this.columnDataType = columnDataType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Column)) return false;
+        Column column = (Column) o;
+        return Objects.equals(columnName, column.columnName) &&
+                Objects.equals(columnDataType, column.columnDataType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnName, columnDataType);
+    }
 }

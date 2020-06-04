@@ -1,5 +1,8 @@
 package com.bcstudio.androidsqlitetoolbox.Database;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Table {
     private String tableName;
     private Column[] columns;
@@ -9,17 +12,18 @@ public class Table {
         this.tableName = tableName.replace(" ", "_");
         this.columns = columns;
 
-        initSQL();
+        if(columns != null)
+            initSQL();
     }
 
     private void initSQL(){
-        sql = " CREATE TABLE IF NOT EXISTS " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
+        sql = " CREATE TABLE IF NOT EXISTS " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ";
         for (int i = 0; i < columns.length; i++) {
-            sql += " " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ";
+            sql = sql.concat(" " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ");
             if (i == columns.length - 1) {
-                sql += " ) ";
+                sql = sql.concat(" ) ");
             } else {
-                sql += " , ";
+                sql = sql.concat(" , ");
             }
         }
     }
@@ -30,6 +34,7 @@ public class Table {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+        initSQL();
     }
 
     public Column[] getColumns() {
@@ -38,6 +43,7 @@ public class Table {
 
     public void setColumns(Column[] columns) {
         this.columns = columns;
+        initSQL();
     }
 
     public String getSql() {
@@ -46,5 +52,21 @@ public class Table {
 
     public void setSql(String sql) {
         this.sql = sql;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Table)) return false;
+        Table table = (Table) o;
+        return Objects.equals(tableName, table.tableName) &&
+                Arrays.equals(columns, table.columns);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(tableName);
+        result = 31 * result + Arrays.hashCode(columns);
+        return result;
     }
 }

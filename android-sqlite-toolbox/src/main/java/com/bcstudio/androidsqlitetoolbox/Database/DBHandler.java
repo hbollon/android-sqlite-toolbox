@@ -7,6 +7,7 @@ import android.database.DatabaseErrorHandler;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Debug;
 import android.util.Log;
 
 import com.bcstudio.androidsqlitetoolbox.Constants;
@@ -72,7 +73,7 @@ public class DBHandler extends SQLiteOpenHelper {
         this.curFactory = curFactory;
         this.version = version;
 
-        //refreshTablesSet();
+        refreshTablesSet(true);
     }
 
     public DBHandler(Context context, String dbName, SQLiteDatabase.CursorFactory curFactory, int version, DatabaseErrorHandler dbErrHandler) {
@@ -83,19 +84,57 @@ public class DBHandler extends SQLiteOpenHelper {
         this.version = version;
         this.dbErrHandler = dbErrHandler;
 
-        //refreshTablesSet();
+        refreshTablesSet(true);
     }
 
-    /*public void refreshTablesSet(){
-        Cursor c = openDataBase().rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+    /**
+     * Update tables array attribute with sqlite_master data
+     * Convert all existing tables to Table and Column objects and add them to tables property
+     * Ignore sql tables (sqlite_sequence, android_metadata)
+     *
+     * @param override Allow function to override Table instance in tables if it already exist
+     */
+    public void refreshTablesSet(boolean override){
+        Cursor c = openDataBase().rawQuery("SELECT * FROM sqlite_master WHERE type='table' AND name!='sqlite_sequence' AND name!='android_metadata'", null);
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
-                tables.add(c.getString( c.getColumnIndex("name")));
+                String currentTableName = c.getString(c.getColumnIndex("name"));
+                String sqlQuery = c.getString(c.getColumnIndex("sql"));
+
+                String[] sqlQuerySplitted = sqlQuery.split("\\s+");
+
+                ArrayList<Column> columnList = new ArrayList<>();
+                String columnName = null;
+                ArrayList<String> columnArgs = new ArrayList<>();
+
+                for (int i = 4; i<sqlQuerySplitted.length-1; i++) {
+                    if(columnName == null)
+                        columnName = sqlQuerySplitted[i];
+                    else if(!sqlQuerySplitted[i].equals(",")) {
+                        columnArgs.add(sqlQuerySplitted[i]);
+                        if(i == sqlQuerySplitted.length-2)
+                            columnList.add(new Column(columnName, columnArgs.toArray(new String[0])));
+                    }
+                    else if(sqlQuerySplitted[i].equals(",")){
+                        if(!columnName.equals("ID"))
+                            columnList.add(new Column(columnName, columnArgs.toArray(new String[0])));
+                        columnArgs.clear();
+                        columnName = null;
+                    }
+                }
+
+                if(getTableIndexFromName(currentTableName) != -1){
+                    if(override)
+                        tables.set(getTableIndexFromName(currentTableName), new Table(currentTableName, columnList.toArray(new Column[0])));
+                }
+                else
+                    tables.add(new Table(currentTableName, columnList.toArray(new Column[0])));
+
                 c.moveToNext();
             }
         }
         c.close();
-    }*/
+    }
 
     /**
      * Add table in existing database and upgrade it
@@ -108,7 +147,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 columns
         );
 
-        tables.add(table);
+        if(getTableIndexFromName(tableName) != -1)
+            tables.set(getTableIndexFromName(tableName), table);
+        else
+            tables.add(table);
+
         openDataBase().execSQL(table.getSql());
     }
 
@@ -409,7 +452,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Export db in csv
+     * Export db to csv
      * @return Success boolean
      */
     public boolean exportDbToCSV(){
@@ -426,7 +469,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Export db in json
+     * Export db to json
      * @return Success boolean
      */
     public boolean exportDbToJSON(){
