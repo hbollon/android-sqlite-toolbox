@@ -73,7 +73,7 @@ public class DBHandler extends SQLiteOpenHelper {
         this.curFactory = curFactory;
         this.version = version;
 
-        refreshTablesSet();
+        refreshTablesSet(true);
     }
 
     public DBHandler(Context context, String dbName, SQLiteDatabase.CursorFactory curFactory, int version, DatabaseErrorHandler dbErrHandler) {
@@ -84,15 +84,17 @@ public class DBHandler extends SQLiteOpenHelper {
         this.version = version;
         this.dbErrHandler = dbErrHandler;
 
-        refreshTablesSet();
+        refreshTablesSet(true);
     }
 
     /**
      * Update tables array attribute with sqlite_master data
      * Convert all existing tables to Table and Column objects and add them to tables property
      * Ignore sql tables (sqlite_sequence, android_metadata)
+     *
+     * @param override Allow function to override Table instance in tables if it already exist
      */
-    public void refreshTablesSet(){
+    public void refreshTablesSet(boolean override){
         Cursor c = openDataBase().rawQuery("SELECT * FROM sqlite_master WHERE type='table' AND name!='sqlite_sequence' AND name!='android_metadata'", null);
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
@@ -106,7 +108,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 ArrayList<String> columnArgs = new ArrayList<>();
 
                 for (int i = 4; i<sqlQuerySplitted.length-1; i++) {
-                    Log.d(Constants.PACKAGE_NAME,sqlQuerySplitted[i]);
                     if(columnName == null)
                         columnName = sqlQuerySplitted[i];
                     else if(!sqlQuerySplitted[i].equals(",")) {
@@ -122,7 +123,12 @@ public class DBHandler extends SQLiteOpenHelper {
                     }
                 }
 
-                tables.add(new Table(currentTableName, columnList.toArray(new Column[0])));
+                if(getTableIndexFromName(currentTableName) != -1)
+                    if(override)
+                        tables.set(getTableIndexFromName(currentTableName), new Table(currentTableName, columnList.toArray(new Column[0])));
+                else
+                    tables.add(new Table(currentTableName, columnList.toArray(new Column[0])));
+
                 c.moveToNext();
             }
         }

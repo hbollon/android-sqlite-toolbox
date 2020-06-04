@@ -1,5 +1,8 @@
 package com.bcstudio.androidsqlitetoolbox.Database;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Table {
     private String tableName;
     private Column[] columns;
@@ -49,5 +52,21 @@ public class Table {
 
     public void setSql(String sql) {
         this.sql = sql;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Table)) return false;
+        Table table = (Table) o;
+        return Objects.equals(tableName, table.tableName) &&
+                Arrays.equals(columns, table.columns);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(tableName);
+        result = 31 * result + Arrays.hashCode(columns);
+        return result;
     }
 }
