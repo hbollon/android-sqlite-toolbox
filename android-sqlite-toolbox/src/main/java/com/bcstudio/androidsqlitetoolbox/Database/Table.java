@@ -9,11 +9,12 @@ public class Table {
         this.tableName = tableName.replace(" ", "_");
         this.columns = columns;
 
-        initSQL();
+        if(columns != null)
+            initSQL();
     }
 
     private void initSQL(){
-        sql = " CREATE TABLE IF NOT EXISTS " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
+        sql = " CREATE TABLE IF NOT EXISTS " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ";
         for (int i = 0; i < columns.length; i++) {
             sql += " " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ";
             if (i == columns.length - 1) {
@@ -30,6 +31,7 @@ public class Table {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+        initSQL();
     }
 
     public Column[] getColumns() {
@@ -38,6 +40,7 @@ public class Table {
 
     public void setColumns(Column[] columns) {
         this.columns = columns;
+        initSQL();
     }
 
     public String getSql() {
