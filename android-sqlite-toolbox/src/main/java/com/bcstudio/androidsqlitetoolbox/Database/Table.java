@@ -19,11 +19,11 @@ public class Table {
     private void initSQL(){
         sql = " CREATE TABLE IF NOT EXISTS " + tableName + " ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ";
         for (int i = 0; i < columns.length; i++) {
-            sql += " " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ";
+            sql = sql.concat(" " + columns[i].getColumnName() + " " + columns[i].getColumnDataType() + " ");
             if (i == columns.length - 1) {
-                sql += " ) ";
+                sql = sql.concat(" ) ");
             } else {
-                sql += " , ";
+                sql = sql.concat(" , ");
             }
         }
     }

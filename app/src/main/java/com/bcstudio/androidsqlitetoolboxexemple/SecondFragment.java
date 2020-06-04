@@ -34,9 +34,6 @@ public class SecondFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         db = new DBHandler(getContext(), DEV_TEST_DB, null, 1);
-        db.addTable("Exemple1", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
-        db.addTable("Exemple2", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
-        db.addTable("Exemple3", new Column("Col1", "text"), new Column("Col2", "text"), new Column("Col3", "text"));
 
         view.findViewById(R.id.buttonExportDb).setOnClickListener(new View.OnClickListener() {
             @Override

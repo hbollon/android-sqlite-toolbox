@@ -16,7 +16,7 @@ public class Column {
             if (!columnDataTypes[i].endsWith(" ")) {
                 columnDataTypes[i] = columnDataTypes[i] + " ";
             }
-            finalDatatype += columnDataTypes[i];
+            finalDatatype = finalDatatype.concat(columnDataTypes[i]);
         }
         this.columnDataType = finalDatatype.toUpperCase();
     }

@@ -452,7 +452,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Export db in csv
+     * Export db to csv
      * @return Success boolean
      */
     public boolean exportDbToCSV(){
@@ -469,7 +469,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Export db in json
+     * Export db to json
      * @return Success boolean
      */
     public boolean exportDbToJSON(){
