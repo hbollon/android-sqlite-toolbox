@@ -1,5 +1,5 @@
 <h1 align="center">Welcome to android-sqlite-toolbox 👋</h1>
-<p>
+<p align="center">
   <a href="https://jitpack.io/#hbollon/android-sqlite-toolbox" target="_blank">
     <img alt="Version" src="https://jitpack.io/v/hbollon/android-sqlite-toolbox.svg" />
   </a>
@@ -8,31 +8,24 @@
   </a>
 </p>
 
-> Android java package designed to manage a sqlite database. Includes creation of the DB and interactions with it, import and export in several formats (easily adaptable to any format) and synchronization in http (sending and receiving).
+> Android java package designed to easily manage a sqlite database. Include creation of the DB and interactions with it, import and export in several formats (easily adaptable to any other format) and synchronization through http.
 
 ### 🏠 [Homepage](https://github.com/hbollon/android-sqlite-toolbox)
 
-<p align="center"><strong> In early development, use it in production at your own risk </strong></p>
+<p align="center"><strong> In development, use it in production at your own risk </strong></p>
 
-## Status
+## Features
 
-Done :
-
-- DBHandler -> Add crud support for db (easy and modulable insert, delete, update, read data in db)
-- Sqlite database export tools (Csv and Json export implemented, you can easily add other format with DBExporter abstract class). ExportConfig class is used for export configuration.
-- Http sync with remote db, sending only for the moment (local -> remote, we send db in json file). The request structure can be easily edited with FileUploadService interface and requestBuilder method. 
-- Table and Column data classes :  used for represent db table and column
-- Db creation and tables addition in DBHandler
-- Random tools in FileUtils
+- Easy creation of databases and tables addition
+- CRUD support for db, easy and modulable: insert, delete, update and read
+- Object representation for all DB elements (Table, Column and Data) for easy manipluation!
+- Sqlite database export tools (Csv and Json export implemented, you can easily add other format with DBExporter abstract class).
 - Db importer which handle natively import from Json (like DBExporter structure so easily adaptable to others formats)
+- Http sync with remote db, sending only for the moment (local -> remote, it sends db in json file). The request structure can be easily edited with FileUploadService interface and requestBuilder method. 
 
-In progress :
-
-- Simple android exemple activity for main functions
-- Add csv native support for import
-  
-Planned :
-
+### Planned features
+- Simple android example activity for main functions
+- Add csv native support for import.
 - Sync db, remote -> local
 
 ## Install
